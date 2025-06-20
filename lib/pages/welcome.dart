@@ -1,14 +1,13 @@
+
+
+
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:online_app/mobile/auth_service.dart';
 
-// Make sure this path matches where AppData is defined
-
 class AppData {
-  // Controls the current index of your BottomNavigationBar (if used)
   static ValueNotifier<int> navBarCurrentIndexNotifier = ValueNotifier(0);
-
-  // Controls the current index of onboarding screens (if used)
   static ValueNotifier<int> onboardingCurrentIndexNotifier = ValueNotifier(0);
 }
 
@@ -17,7 +16,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final user = FirebaseAuth.instance.currentUser;
     final String displayName = user?.displayName ?? 'No username';
     final String email = user?.email ?? 'No email';
@@ -40,201 +38,69 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image from the internet
+          // Background image
           SizedBox.expand(
             child: Image.network(
-              'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', // Replace with your preferred image URL
+              'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
               fit: BoxFit.cover,
             ),
           ),
 
-          // Semi-transparent overlay (optional)
+          // Semi-transparent overlay
           Container(
-            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.3),
           ),
 
-          // Button at the bottom center
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  logout();
+          // Scrollable content
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+            child: Column(
+              children: [
+                const SizedBox(height: 40),
+                const Icon(Icons.account_circle, size: 80, color: Colors.white),
+                const SizedBox(height: 20),
+                Text('Username: $displayName',
+                    style: const TextStyle(fontSize: 18, color: Colors.white)),
+                const SizedBox(height: 12),
+                Text('Email: $email',
+                    style: const TextStyle(fontSize: 18, color: Colors.white)),
+                const SizedBox(height: 40),
 
-                },
-                style: ElevatedButton.styleFrom(
-                  // ignore: deprecated_member_use
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
+                buildButton(context, 'Login', '/login'),
+                buildButton(context, 'Registration', '/register'),
+                buildButton(context, 'Update User Name', '/uuser'),
+                buildButton(context, 'Change Password', '/changepass'),
+                buildButton(context, 'Delete Account', '/delete'),
+
+                ElevatedButton(
+                  onPressed: logout,
+                  style: buttonStyle(),
+                  child: const Text('Logout', style: TextStyle(fontSize: 18)),
                 ),
-                child: const Text(
-                  'Logout',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
+
+                const SizedBox(height: 60),
+              ],
             ),
           ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 100, 0, 100),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/changepass');
-                },
-                style: ElevatedButton.styleFrom(
-                  // ignore: deprecated_member_use
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text('Change Password', style: TextStyle(fontSize: 18)),
-              ),
-            ),
-          ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0 , 0, 200),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/uuser');
-                },
-                style: ElevatedButton.styleFrom(
-                  // ignore: deprecated_member_use
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text('Update User Name', style: TextStyle(fontSize: 18)),
-              ),
-            ),
-          ),
-
-                    Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0 , 0, 300),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/register');
-                },
-                style: ElevatedButton.styleFrom(
-                  // ignore: deprecated_member_use
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text('Registration', style: TextStyle(fontSize: 18)),
-              ),
-            ),
-          ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0 , 0, 400),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login');
-                },
-                style: ElevatedButton.styleFrom(
-                  // ignore: deprecated_member_use
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text('Login', style: TextStyle(fontSize: 18)),
-              ),
-            ),
-          ),
-
-                    Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0 , 0, 500),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/delete');
-                },
-                style: ElevatedButton.styleFrom(
-                
-                  // ignore: deprecated_member_use
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text('Delete Acount', style: TextStyle(fontSize: 18)),
-              ),
-            ),
-          ),
-        
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0 , 0, 600),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Username: $displayName',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Email: $email',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(height: 20),
-                  const Icon(Icons.account_circle, size: 80, color: Colors.blue),
-                ],
-              ),
-            ),
-          ),
-
         ],
       ),
+    );
+  }
+
+  ElevatedButton buildButton(BuildContext context, String label, String route) {
+    return ElevatedButton(
+      onPressed: () => Navigator.pushNamed(context, route),
+      style: buttonStyle(),
+      child: Text(label, style: const TextStyle(fontSize: 18)),
+    );
+  }
+
+  ButtonStyle buttonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: Colors.white.withOpacity(0.9),
+      foregroundColor: Colors.black,
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     );
   }
 }
